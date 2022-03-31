@@ -1,0 +1,18 @@
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding-top: 50px;
+}
+.game__container {
+  height: 80vh;
+  width: 90%;
+  margin: auto;
+  position: relative;
+}
+#game__canvas {
+  height: 80vh;
+  width: 90%;
+  background-image: url("./assets/field.png");
+  border: 1px solid red;
+}
