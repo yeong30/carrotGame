@@ -29,6 +29,7 @@ export default class Game {
 
     this.drawItem(coord);
     this.setLife();
+    this.startCountDown();
   }
   clickItem(e) {
     if (e.target.dataset.item === "carrot") {
@@ -120,18 +121,18 @@ export default class Game {
     this.currentRound = 1;
   }
   startCountDown() {
-    let startTime = 60;
-    timer.textContent = "10:00";
+    let startTime = 10;
+    this.timer.textContent = "10:00";
     this.timeInterval = setInterval(() => {
       startTime--;
       let min = Math.floor(startTime / 60);
       let seconds = startTime % 60;
-      timer.textContent = `${min} : ${
+      this.timer.textContent = `${min} : ${
         String(seconds).length < 2 ? "0" + String(seconds) : String(seconds)
       }`;
       if (startTime == 0) {
         clearInterval(this.timeInterval);
-        this.gameOver();
+        this.changeStage("Game Over");
       }
     }, 1000);
   }
