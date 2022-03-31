@@ -7,15 +7,27 @@
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <title>당근당근</title>
     <script defer src="app.js"></script>
+
     <link rel="styleSheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="game__container">
+      <div class="popup__container">
+        <button class="popup__body" value="start">START</button>
+      </div>
       <div id="game__canvas">
-        <div class="game__timer"><p>10:00</p></div>
-        <div class="game__life">
-          <image class="sholve__img" src="./assets/shovel.png"></image>
+        <div class="game__header">
+          <div class="game__timer"><p class="timer">10:00</p></div>
+          <div class="game__life"></div>
         </div>
+        <div class="game__field"></div>
+        <div class="game__round"><p>Round 1</p></div>
       </div>
     </div>
   </body>
