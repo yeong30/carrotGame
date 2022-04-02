@@ -1,5 +1,8 @@
+const CARROT_SIZE = 70;
+const GAME_TIME = 60;
+
 export default class Game {
-  constructor(round, carrot, bug) {
+  constructor(carrot, bug) {
     this.field = document.querySelector(".game__field");
     this.round = document.querySelector(".game__round");
     this.timer = document.querySelector(".timer");
@@ -8,7 +11,7 @@ export default class Game {
     this.retryBtn.addEventListener("click", (e) => this.retry(e));
     this.timeInterval;
     this.currentLife = 3;
-    this.currentRound = round;
+    this.currentRound = 0;
     this.currentCarrot = carrot;
     this.currentBug = bug;
     this.field.addEventListener("click", (e) => this.clickItem(e));
@@ -17,25 +20,16 @@ export default class Game {
     this.bugSound = new Audio("assets/sound/bug_pull.mp3");
     this.bgSound = new Audio("assets/sound/bg.mp3");
     this.winSound = new Audio("assets/sound/game_win.mp3");
+    this.failed = false;
   }
-  start(count, status) {
-    this.bgSound.play();
-    this.currentCarrot = count;
-
-    if (status === "Next Level") {
+  start(defaultCount = 5) {
+    if (!this.failed) {
       this.nextRound();
-    } else if (status === "Game Over") {
-      this.fail(count);
+    } else if (this.failed) {
+      this.fail(defaultCount);
     }
-    this.round.textContent = "Round" + this.currentRound;
-    const fieldMax = this.field.getBoundingClientRect().height - 70;
-    const baseSize =
-      (this.field.getBoundingClientRect().width - 70) /
-      (this.currentCarrot + this.currentRound);
-    let coord = this.getPlace(fieldMax, baseSize);
-
-    this.drawItem(coord);
-    this.setLife();
+    this.bgSound.play();
+    this.initGame(defaultCount);
     this.startCountDown();
   }
   clickItem(e) {
@@ -53,48 +47,45 @@ export default class Game {
       if (status > 0) {
         return;
       } else {
+        this.failed = true;
+        this.bgSound.pause();
         this.changeStage("Game Over");
       }
     }
   }
-  getPlace(maxY, baseX) {
-    const coordintes = { carrot: [], bug: [] };
-    for (let i = 0; i < this.currentCarrot; i++) {
-      const randomX = Math.random() * (baseX * (i + 1) - baseX * i) + baseX * i;
-      const randomY = Math.random() * maxY;
-      coordintes.carrot.push({ x: randomX, y: randomY });
-    }
-    for (let i = 0; i < this.currentBug; i++) {
-      const randomBugX =
-        Math.random() * (baseX * (i + 1) - baseX * i) + baseX * i;
-      const randomBugY = Math.random() * maxY;
-      coordintes.bug.push({ x: randomBugX, y: randomBugY });
-    }
+  getRandomNumber(maxX, maxY, count, i) {
+    const base = maxX / count;
+    const coordintes = {};
+    const randomX = Math.random() * (base * (i + 1) - base * i) + base * i;
+    const randomY = Math.random() * maxY;
+    coordintes.x = randomX;
+    coordintes.y = randomY;
     return coordintes;
   }
+  initGame(count) {
+    this.reset();
+    this.round.textContent = "Round " + this.currentRound;
+    this.currentCarrot = count;
+    this.drawItem("carrot", "./assets/img/carrot.png", this.currentCarrot);
+    this.drawItem("bug", "./assets/img/bug.png", this.currentBug);
+    this.setLife();
+  }
+  drawItem(name, src, count) {
+    const maxY = this.field.getBoundingClientRect().height - CARROT_SIZE;
+    const maxX = this.field.getBoundingClientRect().width - CARROT_SIZE;
 
-  drawItem(coord) {
-    for (let i = 0; i < coord.carrot.length; i++) {
-      let carrot = document.createElement("img");
-      carrot.src = "./assets/img/carrot.png";
-      carrot.setAttribute("class", "carrot__img");
-      carrot.setAttribute("data-item", "carrot");
-      carrot.style.transform = `translate(${coord.carrot[i].x}px,${coord.carrot[i].y}px)`;
-      this.field.append(carrot);
-    }
-
-    for (let i = 0; i < coord.bug.length; i++) {
-      let bug = document.createElement("img");
-      bug.src = "./assets/img/bug.png";
-      bug.setAttribute("class", "bug__img");
-      bug.setAttribute("data-item", "bug");
-      bug.style.transform = `translate(${coord.bug[i].x}px,${coord.bug[i].y}px)`;
-      this.field.append(bug);
+    for (let i = 0; i < count; i++) {
+      const { x, y } = this.getRandomNumber(maxX, maxY, count, i);
+      let item = document.createElement("img");
+      item.src = src;
+      item.setAttribute("class", name + "__img");
+      item.setAttribute("data-item", name);
+      item.style.transform = `translate(${x}px,${y}px)`;
+      this.field.append(item);
     }
   }
   setLife() {
     this.currentLife = 3;
-
     for (let i = 0; i < this.currentLife; i++) {
       let img = document.createElement("img");
       img.src = "./assets/img/shovel.png";
@@ -120,18 +111,16 @@ export default class Game {
   }
   nextRound() {
     this.winSound.play();
-    this.reset();
     this.currentRound++;
     this.currentBug++;
   }
   fail(count) {
-    this.reset();
     this.currentBug = count;
     this.currentCarrot = count;
     this.currentRound = 1;
   }
   startCountDown() {
-    let startTime = 10;
+    let startTime = GAME_TIME;
     this.timer.textContent = "10:00";
     this.timeInterval = setInterval(() => {
       startTime--;
@@ -147,6 +136,7 @@ export default class Game {
     }, 1000);
   }
   retry(e) {
+    this.bgSound.pause();
     this.changeStage("Game Over");
   }
 }

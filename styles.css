@@ -61,15 +61,17 @@ p {
   position: relative;
 }
 #game__canvas {
-  height: 80vh;
-  width: 100%;
   background-image: url("./assets/img/field.png");
+  background-position: center;
+  background-size: cover;
   padding: var(--base-size-medium);
   margin: auto;
   border-radius: var(--border-radius);
   border: 5px solid var(--color-dark-gray);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 /* img */
 .sholve__img,
@@ -122,6 +124,7 @@ p {
 }
 .game__life {
   text-align: right;
+  height: 50px;
 }
 /* bottom */
 .game__round {

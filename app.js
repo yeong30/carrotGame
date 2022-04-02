@@ -11,10 +11,10 @@ window.addEventListener("load", () => {
 });
 function startGame() {
   let status = "START";
-  const game = new Game(ROUND, START_CARROT, START_BUG);
+  const game = new Game(START_CARROT, START_BUG);
   const popup = new PopUp(status);
   popup.clickEvent = function () {
-    game.start.bind(game)(START_CARROT, status);
+    game.start.bind(game)(START_BUG);
     popup.hide();
   };
   game.changeMessage = function (value) {
