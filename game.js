@@ -4,6 +4,8 @@ export default class Game {
     this.round = document.querySelector(".game__round");
     this.timer = document.querySelector(".timer");
     this.life = document.querySelector(".game__life");
+    this.retryBtn = document.querySelector(".retry__Btn");
+    this.retryBtn.addEventListener("click", (e) => this.retry(e));
     this.timeInterval;
     this.currentLife = 3;
     this.currentRound = round;
@@ -11,8 +13,13 @@ export default class Game {
     this.currentBug = bug;
     this.field.addEventListener("click", (e) => this.clickItem(e));
     this.changeMessage;
+    this.carrotSound = new Audio("assets/sound/carrot_pull.mp3");
+    this.bugSound = new Audio("assets/sound/bug_pull.mp3");
+    this.bgSound = new Audio("assets/sound/bg.mp3");
+    this.winSound = new Audio("assets/sound/game_win.mp3");
   }
   start(count, status) {
+    this.bgSound.play();
     this.currentCarrot = count;
 
     if (status === "Next Level") {
@@ -69,7 +76,7 @@ export default class Game {
   drawItem(coord) {
     for (let i = 0; i < coord.carrot.length; i++) {
       let carrot = document.createElement("img");
-      carrot.src = "./assets/carrot.png";
+      carrot.src = "./assets/img/carrot.png";
       carrot.setAttribute("class", "carrot__img");
       carrot.setAttribute("data-item", "carrot");
       carrot.style.transform = `translate(${coord.carrot[i].x}px,${coord.carrot[i].y}px)`;
@@ -78,7 +85,7 @@ export default class Game {
 
     for (let i = 0; i < coord.bug.length; i++) {
       let bug = document.createElement("img");
-      bug.src = "./assets/bug.png";
+      bug.src = "./assets/img/bug.png";
       bug.setAttribute("class", "bug__img");
       bug.setAttribute("data-item", "bug");
       bug.style.transform = `translate(${coord.bug[i].x}px,${coord.bug[i].y}px)`;
@@ -90,7 +97,7 @@ export default class Game {
 
     for (let i = 0; i < this.currentLife; i++) {
       let img = document.createElement("img");
-      img.src = "./assets/shovel.png";
+      img.src = "./assets/img/shovel.png";
       img.setAttribute("class", "sholve__img");
       this.life.append(img);
     }
@@ -100,9 +107,11 @@ export default class Game {
     this.life.innerHTML = "";
   }
   removeLife() {
+    this.bugSound.play();
     return --this.currentLife;
   }
   removeCarrot() {
+    this.carrotSound.play();
     return --this.currentCarrot;
   }
   changeStage(value) {
@@ -110,6 +119,7 @@ export default class Game {
     this.changeMessage && this.changeMessage(value);
   }
   nextRound() {
+    this.winSound.play();
     this.reset();
     this.currentRound++;
     this.currentBug++;
@@ -135,5 +145,8 @@ export default class Game {
         this.changeStage("Game Over");
       }
     }, 1000);
+  }
+  retry(e) {
+    this.changeStage("Game Over");
   }
 }
