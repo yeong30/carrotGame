@@ -1,6 +1,5 @@
 import Game from "./game.js";
 import PopUp from "./popup.js";
-let ROUND = 1;
 let START_CARROT = 5;
 let START_BUG = 5;
 

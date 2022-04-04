@@ -63,7 +63,11 @@ export default class Game {
     return coordintes;
   }
   initGame(count) {
-    this.reset();
+    this.field.innerHTML = "";
+    this.life.innerHTML = "";
+
+    this.failed = false;
+
     this.round.textContent = "Round " + this.currentRound;
     this.currentCarrot = count;
     this.drawItem("carrot", "./assets/img/carrot.png", this.currentCarrot);
@@ -93,10 +97,7 @@ export default class Game {
       this.life.append(img);
     }
   }
-  reset() {
-    this.field.innerHTML = "";
-    this.life.innerHTML = "";
-  }
+
   removeLife() {
     this.bugSound.play();
     return --this.currentLife;
@@ -120,23 +121,27 @@ export default class Game {
     this.currentRound = 1;
   }
   startCountDown() {
-    let startTime = GAME_TIME;
-    this.timer.textContent = "10:00";
+    let currentTime = GAME_TIME;
+    this.printCurrentTime(currentTime);
     this.timeInterval = setInterval(() => {
-      startTime--;
-      let min = Math.floor(startTime / 60);
-      let seconds = startTime % 60;
-      this.timer.textContent = `${min} : ${
-        String(seconds).length < 2 ? "0" + String(seconds) : String(seconds)
-      }`;
-      if (startTime == 0) {
+      this.printCurrentTime(--currentTime);
+      if (currentTime == 0) {
         clearInterval(this.timeInterval);
         this.changeStage("Game Over");
       }
     }, 1000);
   }
+  printCurrentTime(time) {
+    let min = Math.floor(time / 60);
+    let seconds = time % 60;
+    this.timer.textContent = `${min} : ${
+      String(seconds).length < 2 ? "0" + String(seconds) : String(seconds)
+    }`;
+    return;
+  }
   retry(e) {
     this.bgSound.pause();
+    this.failed = true;
     this.changeStage("Game Over");
   }
 }
