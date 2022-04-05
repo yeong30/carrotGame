@@ -28,7 +28,7 @@ export default class Game {
     } else if (this.failed) {
       this.fail(defaultCount);
     }
-    this.bgSound.play();
+    this.playSounds(this.bgSound);
     this.initGame(defaultCount);
     this.startCountDown();
   }
@@ -39,7 +39,7 @@ export default class Game {
       if (status > 0) {
         return;
       } else {
-        this.changeStage("Next Level");
+        this.changeStageFail(false, "Next Level");
       }
     } else if (e.target.dataset.item === "bug") {
       const status = this.removeLife();
@@ -49,7 +49,7 @@ export default class Game {
       } else {
         this.failed = true;
         this.bgSound.pause();
-        this.changeStage("Game Over");
+        this.changeStageFail(true);
       }
     }
   }
@@ -84,7 +84,8 @@ export default class Game {
       item.src = src;
       item.setAttribute("class", name + "__img");
       item.setAttribute("data-item", name);
-      item.style.transform = `translate(${x}px,${y}px)`;
+      item.style.top = `${y}px`;
+      item.style.left = `${x}px`;
       this.field.append(item);
     }
   }
@@ -99,19 +100,28 @@ export default class Game {
   }
 
   removeLife() {
-    this.bugSound.play();
+    this.playSounds(this.bugSound);
+
     return --this.currentLife;
   }
   removeCarrot() {
-    this.carrotSound.play();
+    this.playSounds(this.carrotSound);
+
     return --this.currentCarrot;
   }
-  changeStage(value) {
+
+  changeStageFail(fail, msg = "Game Over") {
     if (this.timeInterval) clearInterval(this.timeInterval);
-    this.changeMessage && this.changeMessage(value);
+    if (fail) {
+      this.changeMessage(msg);
+      this.failed = true;
+      this.bgSound.pause();
+    } else {
+      this.changeMessage(msg);
+    }
   }
   nextRound() {
-    this.winSound.play();
+    this.playSounds(this.winSound);
     this.currentRound++;
     this.currentBug++;
   }
@@ -126,8 +136,7 @@ export default class Game {
     this.timeInterval = setInterval(() => {
       this.printCurrentTime(--currentTime);
       if (currentTime == 0) {
-        clearInterval(this.timeInterval);
-        this.changeStage("Game Over");
+        this.changeStageFail(true);
       }
     }, 1000);
   }
@@ -140,8 +149,10 @@ export default class Game {
     return;
   }
   retry(e) {
-    this.bgSound.pause();
-    this.failed = true;
-    this.changeStage("Game Over");
+    this.changeStageFail(true, "Retry");
+  }
+  playSounds(target) {
+    target.currentTime = 0;
+    target.play();
   }
 }

@@ -79,10 +79,16 @@ p {
 .bug__img {
   width: var(--img-size-large);
   height: var(--img-size-large);
+  transition: transform 200ms ease;
 }
 .carrot__img,
 .bug__img {
   position: absolute;
+}
+
+.bug__img:hover,
+.carrot__img:hover {
+  transform: scale(1.2);
 }
 /* header */
 .game__header .sholve__img {
@@ -135,7 +141,6 @@ p {
   width: 15%;
   min-width: 80px;
   max-width: 200px;
-
   text-align: center;
   background-color: var(--color-light-orange);
   color: white;
@@ -187,5 +192,11 @@ p {
     width: 30%;
     max-width: 200px;
     font-size: var(--font-size-medium);
+  }
+  .game__timer {
+    font-size: var(--font-size-medium);
+  }
+  .game__round {
+    font-size: var(--font-size-small);
   }
 }
