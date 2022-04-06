@@ -17,6 +17,7 @@
 # 수정할 점
 
 현재 클래스로 모듈화한 함수가 그다지 효율적으로 보이지 않음. 리팩토링 필요
+hover시 item 사이즈 수정  + transition사용시 transfrom scale이 적용되징낳은ㄴ이유?
 
 # TimeLine
 

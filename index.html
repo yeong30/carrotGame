@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
     <title>당근당근</title>
-    <script type="module" defer src="main.js"></script>
+    <script type="module" defer src="/src/main.js"></script>
 
     <script
       src="https://kit.fontawesome.com/713cef416d.js"
@@ -22,10 +22,10 @@
   </head>
   <body>
     <div class="game__container">
-      <div class="popup__container">
+      <section class="popup__container">
         <button class="popup__body" value="start">START</button>
-      </div>
-      <div id="game__canvas">
+      </section>
+      <section id="game__canvas">
         <div class="game__header">
           <div class="game__timer"><p class="timer">-:-</p></div>
           <button class="retry__Btn" value="retry">
@@ -35,7 +35,7 @@
         </div>
         <div class="game__field"></div>
         <div class="game__round"><p>Round 1</p></div>
-      </div>
+      </section>
     </div>
   </body>
 </html>
