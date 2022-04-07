@@ -150,6 +150,13 @@ p {
   bottom: var(--base-size-medium);
   font-weight: var(--font-weight-bold);
 }
+.mute__btn {
+  position: absolute;
+  bottom: -100px;
+  right: var(--base-size-medium);
+  color: var(--color-deep-orange);
+  font-size: var(--font-size-large);
+}
 
 /* pop up */
 .popup__container {
